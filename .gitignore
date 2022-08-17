@@ -2,3 +2,7 @@ wasm
 node_modules
 dist
 package-lock.json
+src/*.data
+src/*-*_*.js
+src/pyjs_runtime_*
+src/sample_webpack_example.js

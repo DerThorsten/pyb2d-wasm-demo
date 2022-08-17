@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build:dockerimage": "docker build -t mamba_docker_image .",
-    "build:empack":      "docker run  -it --mount type=bind,source=${PWD}/wasm,target=/wasm   mamba_docker_image cp -a output/. /wasm",
-    "build:copy_pyjs":   "docker run  -it --mount type=bind,source=${PWD}/wasm,target=/wasm   mamba_docker_image cp -a /opt/conda/envs/pyjs-wasm-env/lib_js/pyjs/. /wasm",
+    "build:empack":      "docker run  -it --mount type=bind,source=${PWD}/src,target=/wasm   mamba_docker_image cp -a output/. /wasm",
+    "build:copy_pyjs":   "docker run  -it --mount type=bind,source=${PWD}/src,target=/wasm   mamba_docker_image cp -a /opt/conda/envs/pyjs-wasm-env/lib_js/pyjs/. /wasm",
     "build:wasm": "npm run build:dockerimage && npm run build:empack && npm run build:copy_pyjs",
+    "copy_to_source": "npm run build:dockerimage && npm run build:empack && npm run build:copy_pyjs",
     "bash":   "docker run  -it --mount type=bind,source=${PWD}/wasm,target=/wasm   mamba_docker_image bash",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack serve --mode development",
@@ -20,7 +21,9 @@
     "html-webpack-plugin": "^5.5.0",
     "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.10.0"
+    "webpack-dev-server": "^4.10.0",
+    "copy-webpack-plugin": "^9.0.1",
+    "copyfiles": "^2.4.1"
   },
   "dependencies": {
     "@egjs/flicking": "^4.9.2",
