@@ -1,15 +1,15 @@
 import panzoom from 'panzoom';
 import flicking from '@egjs/flicking';
 import createModule from './pyjs_runtime_browser.js';
-console.log(panzoom);
-console.log(flicking);
+// console.log(panzoom);
+// console.log(flicking);
 
 
 // just grab a DOM element
 var element = document.querySelector('#scene')
 
 // And pass it to panzoom
-panzoom(element)
+// panzoom(element)
 
 // (async function(){
 //     console.log("in async main")

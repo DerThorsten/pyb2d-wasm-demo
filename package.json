@@ -11,8 +11,8 @@
     "copy_to_source": "npm run build:dockerimage && npm run build:empack && npm run build:copy_pyjs",
     "bash":   "docker run  -it --mount type=bind,source=${PWD}/wasm,target=/wasm   mamba_docker_image bash",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack serve --mode development",
-    "build": "webpack --mode production"
+    "dev": "npm run build:wasm && webpack serve --mode development",
+    "build": "npm run build:wasm && webpack --mode production"
   },
   "keywords": [],
   "author": "",
