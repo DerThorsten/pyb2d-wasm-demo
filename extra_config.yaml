@@ -1,0 +1,10 @@
+packages:
+  pip:
+    exclude_patterns:
+      - pattern: '**'
+  setuptools:
+    exclude_patterns:
+      - pattern: '**'
+  wheels:
+    exclude_patterns:
+      - pattern: '**'
