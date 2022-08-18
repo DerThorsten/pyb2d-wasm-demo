@@ -1,19 +1,15 @@
+
+import jQuery from 'jquery'
 import panzoom from 'panzoom';
 import flicking from '@egjs/flicking';
-import createModule from './pyjs_runtime_browser.js';
+import {createModule} from './pyjs_runtime_browser.js';
 // console.log(panzoom);
 // console.log(flicking);
 
-
-// just grab a DOM element
 var element = document.querySelector('#scene')
+panzoom(element)
 
-// And pass it to panzoom
-// panzoom(element)
-
-// (async function(){
-//     console.log("in async main")
-// })()
+import bootstrap from 'bootstrap'
 
 
 const asyncMain = async () => {
@@ -31,7 +27,9 @@ const asyncMain = async () => {
     await load_all()
     await pyjs.init()
 
+    pyjs.eval("print('hello world')")
 
 };
+
 
 asyncMain()

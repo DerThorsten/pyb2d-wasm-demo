@@ -1,10 +1,15 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
 
 const path = require('path');
 
 module.exports = {
   plugins: [
+    new webpack.ProvidePlugin({
+           $: "jquery",
+           jQuery: "jquery"
+    }),
     new HtmlWebpackPlugin({
       hash: true,
       title: 'Webpack Example App',
@@ -28,6 +33,8 @@ module.exports = {
     })
   ],
   mode: 'development',
+  watch: true, // Enable watch mode
+  target: 'web',
   output: {
     clean: true
   },

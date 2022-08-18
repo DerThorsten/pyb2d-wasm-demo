@@ -24,10 +24,7 @@ RUN empack pack env \
     --config empack_config.yaml \
     --config extra_config.yaml  \
     --outdir output \
-    --split \
-    && ls
+    --split
 
 RUN mkdir wasm
-
-# pack the environment in a js/data file
 
