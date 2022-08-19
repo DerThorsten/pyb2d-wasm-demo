@@ -4,16 +4,46 @@
   <head>
     <title>Webpack Example App</title>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
 
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="description" content="Webpack Example Description"/>
   </head>
   <body>
-  <svg>
-    <!-- this is the draggable root -->
-    <g id='scene'> 
-      <circle cx='10' cy='10' r='5' fill='blue'></circle>
-    </g>
-  </svg>
+    
+
+
+<div class="container">
+  <div class="row"> 
+    <span class="col-sm-3">
+      <button type="button"  class="btn btn-primary" aria-label="Left Align" id="play_button">
+        <span class="fa fa-play fa-lg" aria-hidden="true"></span>
+      </button>
+    </span>
+    <div class="progress" class="col-sm-8">
+      <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
+        <span class="sr-only">45% Complete</span>
+      </div>
+    </div>
+  </div>  
+</div>
+
+
+<div class="row">
+  <div class="col">col</div>
+  <div class="col">col</div>
+  <div class="col">col</div>
+  <div class="col">col</div>
+</div>
+<div class="row">
+  <div class="col-8">col-8</div>
+  <div class="col-4">col-4</div>
+</div>
+
+
+
+  <div id="editor-container" style="height: 1000px"></div>
+
+  <div id="terminal-container" style="height: 100px%"></div>
+
 </body>
 </html>
