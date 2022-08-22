@@ -50,7 +50,7 @@ class CanvasAsyncGui(GuiBase):
         )
         self.flip_bit = False
 
-        # canvas _events
+        # canvas _events THIS IS A MEM LEAK!
         js_py_mouse_up, _ = make_js_func(self.on_mouse_up)
         js_py_mouse_down, _ = make_js_func(self.on_mouse_down)
         js_py_mouse_move, _ = make_js_func(self.on_mouse_move)
