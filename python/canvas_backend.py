@@ -57,6 +57,12 @@ class CanvasAsyncGui(GuiBase):
         self.canvas["onmousemove"] = js_py_mouse_move
         self.canvas["onmouseup"] = js_py_mouse_up
 
+
+        self.canvas.addEventListener("ontouchstart", js_py_mouse_down, False)
+        self.canvas.addEventListener("ontouchmove", js_py_mouse_move, False)
+        self.canvas.addEventListener("ontouchend", js_py_mouse_up, False)
+
+
         js_dict = pyjs.js.Function("return { passive: false }")()
         self.canvas.addEventListener("wheel", js_py_mouse_wheel, js_dict)
 
