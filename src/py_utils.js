@@ -6,7 +6,6 @@ var pyjs = null
 var editor = null
 
 async function load_pycode(loc){
-    console.log("fetching pycode")
     return await (await fetch(loc)).text();
 }
 
