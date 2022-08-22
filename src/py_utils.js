@@ -1,4 +1,4 @@
-import {createModule} from '../pyjs_runtime_browser.js';
+import {createModule} from './pyjs_runtime_browser.js';
 import {CanvasDebugDraw} from "./canvas_debug_draw.js"
 
 var pyjs_init_promise = null
@@ -26,7 +26,7 @@ async function load_pyb2_example(context, name){
     {
         console.log("fetching pycode")
         let fname = context.examples.examples_dict[name]
-        let p =  load_pycode(`../python/examples/${fname}`)
+        let p =  load_pycode(`./python/examples/${fname}`)
         p.then((code)=>{
             db_store_example(context, name, code)
         });
@@ -53,8 +53,8 @@ async function set_current_example(context, name){
 
 async function init_pybd(context){
 
-    const canvas_debug_draw_code = await load_pycode('../python/canvas_debug_draw.py')
-    const canvas_backend_code = await load_pycode('../python/canvas_backend.py')
+    const canvas_debug_draw_code = await load_pycode('./python/canvas_debug_draw.py')
+    const canvas_backend_code = await load_pycode('./python/canvas_backend.py')
     globalThis.canvas_debug_draw = new CanvasDebugDraw(context.canvas)
     await pyjs_init_promise
     globalThis.pyjs.exec(canvas_debug_draw_code)
@@ -95,7 +95,7 @@ async function init_pyjs(context){
 
     }
     terminal.writeln("Download data ...")
-    const { default: load_all }  = await import('../sample_webpack_example.js')
+    const { default: load_all }  = await import('./sample_webpack_example.js')
     await load_all()
     pyjs_init_promise =  pyjs.init()
     pyjs_init_promise.then(()=>{
@@ -106,7 +106,7 @@ async function init_pyjs(context){
 }
 
 async function fetch_examples_list(context){
-    let examples_list = await (await fetch('../python/examples/examples.json')).json();
+    let examples_list = await (await fetch('./python/examples/examples.json')).json();
     context.examples.examples_list =  examples_list
     context.examples.examples_dict = {}
     for(let i=0; i<examples_list.length; ++i){

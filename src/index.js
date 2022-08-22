@@ -12,10 +12,10 @@ import * as bootstrap from 'bootstrap'
 
 import css4 from './css/mycss.css';
 
-import {createTerminal} from './js/create_terminal.js'
-import {createEditor} from './js/create_editor.js'
-import {init_py,schedule_run} from './js/py_utils.js'
-import {init_ui_pre,init_ui_post} from './js/ui.js'
+import {createTerminal} from './create_terminal.js'
+import {createEditor} from './create_editor.js'
+import {init_py,schedule_run} from './py_utils.js'
+import {init_ui_pre,init_ui_post} from './ui.js'
 
 
 
