@@ -95,7 +95,7 @@ function add_level_to_dropdown(context, text){
             
             var level_toggle_button = document.getElementById("level_toggle_button")
             level_toggle_button.innerHTML = text
-            set_current_example(context, text)
+            await set_current_example(context, text)
             await start_running(context)
         }
     }
