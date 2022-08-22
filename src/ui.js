@@ -87,18 +87,14 @@ function add_level_to_dropdown(context, text){
     link.href = "#";
     link.classList.add("dropdown-item")
     li.appendChild(link);
-    console.log(link)
     link.onclick = async function(evt){
 
         if(context.state.running){
 
             await stop_running(context)
             
-
-            console.log(`selected level: ${text}`)
             var level_toggle_button = document.getElementById("level_toggle_button")
             level_toggle_button.innerHTML = text
-            console.log(level_toggle_button)
             set_current_example(context, text)
             await start_running(context)
         }

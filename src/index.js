@@ -25,7 +25,6 @@ const asyncMain = async () => {
 
     var terminal = createTerminal()
     var editor = createEditor()
-    console.log("EDITOR STATE",editor.state)
     var canvas =document.getElementById('myCanvas')
     var context = {
         terminal:terminal,
@@ -56,7 +55,6 @@ const asyncMain = async () => {
         }
 
     }
-    console.log("in async main")    
     init_ui_pre(context)
     var pyjs = await init_py(context)
     init_ui_post(context)

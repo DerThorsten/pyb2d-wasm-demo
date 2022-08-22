@@ -24,7 +24,6 @@ async function load_pyb2_example(context, name){
     let saved_exampled = db_load_example(context, name)
     if(!saved_exampled || saved_exampled==="")
     {
-        console.log("fetching pycode")
         let fname = context.examples.examples_dict[name]
         let p =  load_pycode(`./python/examples/${fname}`)
         p.then((code)=>{
@@ -44,7 +43,6 @@ async function set_current_example(context, name){
         context.editor.dispatch({
           changes: {from: 0, to: context.editor.state.doc.length, insert: code}
         })
-        console.log("current is", name)
         context.examples.curret_example = name
     })
     return load_code_promise
@@ -87,7 +85,6 @@ async function init_pyjs(context){
     })
     // globalThis.Module = pyjs
     globalThis.pyjs = pyjs
-    console.log("terminal",terminal)
     pyjs.empackSetStatus = function(status, packageName, downloaded,total){
         var str = `Downloading data: ${downloaded} / ${total}`
         // console.log(str)
