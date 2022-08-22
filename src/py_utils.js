@@ -150,7 +150,6 @@ async function run(context){
     }
     catch (e) {
         console.error(e)
-        // terminal.writeln("catched error:",e)
         context.terminal.writeln(JSON.stringify(e.message));
     }
 }
