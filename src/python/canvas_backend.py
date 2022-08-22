@@ -12,6 +12,10 @@ def make_js_func(py_func):
     f = jspy.py_call.bind(jspy)
     return f, jspy
 
+class PseudoMouseEvent(object):
+    def __init__(self, touch_event):
+        self.x = touch_event.clientX
+        self.y = touch_event.clientY
 
 class CanvasAsyncGui(GuiBase):
     class Settings(GuiBase.Settings):
@@ -50,17 +54,20 @@ class CanvasAsyncGui(GuiBase):
         js_py_mouse_up, _ = make_js_func(self.on_mouse_up)
         js_py_mouse_down, _ = make_js_func(self.on_mouse_down)
         js_py_mouse_move, _ = make_js_func(self.on_mouse_move)
-
         js_py_mouse_wheel, _ = make_js_func(self.on_mouse_wheel)
+
+        js_py_touch_up, _ = make_js_func(self.on_touch_up)
+        js_py_touch_down, _ = make_js_func(self.on_touch_down)
+        js_py_touch_move, _ = make_js_func(self.on_touch_move)
 
         self.canvas["onmousedown"] = js_py_mouse_down
         self.canvas["onmousemove"] = js_py_mouse_move
         self.canvas["onmouseup"] = js_py_mouse_up
 
 
-        self.canvas.addEventListener("ontouchstart", js_py_mouse_down, False)
-        self.canvas.addEventListener("ontouchmove", js_py_mouse_move, False)
-        self.canvas.addEventListener("ontouchend", js_py_mouse_up, False)
+        self.canvas.addEventListener("ontouchstart", js_py_touch_down, False)
+        self.canvas.addEventListener("ontouchmove", js_py_touch_move, False)
+        self.canvas.addEventListener("ontouchend", js_py_touch_up, False)
 
 
         js_dict = pyjs.js.Function("return { passive: false }")()
@@ -134,6 +141,16 @@ class CanvasAsyncGui(GuiBase):
             pos = pos.x, pos.y
 
             self.testbed.on_mouse_down(pos)
+
+    def on_touch_down(self, e):
+        touch = PseudoMouseEvent(e.touches[0])
+        self.on_mouse_down(touch)
+    def on_touch_move(self, e):
+        touch = PseudoMouseEvent(e.touches[0])
+        self.on_mouse_move(touch)
+    def on_touch_up(self, e):
+        touch = PseudoMouseEvent(e.touches[0])
+        self.on_mouse_up(touch)
 
     # moue callbacks
     def on_mouse_up(self, e):
