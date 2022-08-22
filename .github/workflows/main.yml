@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+
+
+defaults:
+  run:
+    shell: bash -l {0}
+
+
+jobs:
+
+  build_page:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        emsdk_ver: ["3.1.2"]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: docker-practice/actions-setup-docker@master
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      
+      - name: build page
+        run: |
+          npm run get_wasm
+          npm run build
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          enable_jekyll: false
