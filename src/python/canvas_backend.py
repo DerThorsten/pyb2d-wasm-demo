@@ -143,12 +143,15 @@ class CanvasAsyncGui(GuiBase):
             self.testbed.on_mouse_down(pos)
 
     def on_touch_down(self, e):
+        e.preventDefault()
         touch = PseudoMouseEvent(e.touches[0])
         self.on_mouse_down(touch)
     def on_touch_move(self, e):
+        e.preventDefault()
         touch = PseudoMouseEvent(e.touches[0])
         self.on_mouse_move(touch)
     def on_touch_up(self, e):
+        e.preventDefault()
         touch = PseudoMouseEvent(e.touches[0])
         self.on_mouse_up(touch)
 
