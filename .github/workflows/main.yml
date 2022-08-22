@@ -32,11 +32,12 @@ jobs:
         uses: mamba-org/provision-with-micromamba@main
         with:
           environment-file: build-env.yaml
-          environment-name: base
+          environment-name: build-env
           micromamba-version: "0.22.0"
 
       - name:
         run: |
+          micromamba activate build-env
           npm install
           npm run build:with_micromamba
 
