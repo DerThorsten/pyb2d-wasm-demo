@@ -36,9 +36,9 @@ jobs:
           micromamba-version: "0.22.0"
 
       - name:
-          run: |
-            npm install
-            npm run build:with_micromamba
+        run: |
+          npm install
+          npm run build:with_micromamba
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
