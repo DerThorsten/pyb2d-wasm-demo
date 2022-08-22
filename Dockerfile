@@ -24,6 +24,7 @@ RUN empack pack env \
     --config empack_config.yaml \
     --config extra_config.yaml  \
     --outdir output \
+    --export-name globalThis.pyjs \
     --split
 
 RUN mkdir wasm

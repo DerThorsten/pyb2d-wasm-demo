@@ -1,49 +1,98 @@
-<!-- https://www.codeinwp.com/blog/webpack-tutorial-for-beginners/ -->
 <!doctype html>
 <html lang="en">
-  <head>
-    <title>Webpack Example App</title>
+<head>
+    <title>PyB2D - WASM - Emscripten-Forge</title>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-
     <meta name="description" content="Webpack Example Description"/>
-  </head>
-  <body>
+</head>
+
+
+<body>
+
+
+<nav class="nav nav-tabs">
+    <a class="nav-link active" aria-current="page" href="#" onclick="openTab(event, 'CanvasTab')" id="openCanvas">
+        UI
+    </a>
+    <a class="nav-link"                            href="#" onclick="openTab(event, 'CodeTab')">
+        Code
+    </a>
+    <a class="nav-link"                            href="#" onclick="openTab(event, 'LogTab')" id="openLog">
+        Log
+    </a>
+    <a class="nav-link"                            href="#" onclick="openTab(event, 'AboutTab')">
+        About
+    </a>
+</nav>
+
+
+<!-- the canvas -->
+<div id="CanvasTab" class="tabcontent">
+    <canvas id="myCanvas" width="0" height="0">
+    </canvas>
+
+
+    <br>
+
+    <!-- controll buttons -->
+    <div class="btn-group">
+
+
+        <div class="dropdown">
+          <button class="btn btn-outline-primary dropdown-toggle" disabled type="button" id="level_toggle_button" data-bs-toggle="dropdown" aria-expanded="false">
+            Loading ...
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="level_toggle_button" id="level_dropdown">
+           <!--  <li><a class="dropdown-item" href="#">Newtons Cradle</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li> -->
+          </ul>
+        </div>
+
+        <button type="button" disabled class="btn btn-outline-primary" aria-label="Left Align" id="play_button">
+          <span class="fa fa-play fa-lg" aria-hidden="true"></span>
+        </button>
+        <button type="button" disabled class="btn btn-outline-primary" aria-label="Left Align" id="pause_button">
+          <span class="fa fa-pause fa-lg" aria-hidden="true"></span>
+        </button>
+        <button type="button" disabled class="btn btn-outline-primary" aria-label="Left Align" id="stop_button">
+          <span class="fa fa-stop fa-lg" aria-hidden="true"></span>
+        </button>
+        <button type="button" disabled class="btn btn-outline-primary" aria-label="Left Align" id="forward_button">
+          <span class="fa fa-forward fa-lg" aria-hidden="true"></span>
+        </button>
+
+    <!-- Small button groups (default and split) -->
     
 
-
-<div class="container">
-  <div class="row"> 
-    <span class="col-sm-3">
-      <button type="button"  class="btn btn-primary" aria-label="Left Align" id="play_button">
-        <span class="fa fa-play fa-lg" aria-hidden="true"></span>
-      </button>
-    </span>
-    <div class="progress" class="col-sm-8">
-      <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
-        <span class="sr-only">45% Complete</span>
-      </div>
     </div>
-  </div>  
+
+
+</div>
+        
+<div id="CodeTab" class="tabcontent">
+<td><textarea name="inputtext" id="inputtext"></textarea></td>
 </div>
 
 
-<div class="row">
-  <div class="col">col</div>
-  <div class="col">col</div>
-  <div class="col">col</div>
-  <div class="col">col</div>
+<div id="LogTab" class="tabcontent">
+    <div id="terminal-container" style="height: 100%"></div>
 </div>
-<div class="row">
-  <div class="col-8">col-8</div>
-  <div class="col-4">col-4</div>
+
+<div id="AboutTab" class="tabcontent">
 </div>
 
 
 
-  <div id="editor-container" style="height: 1000px"></div>
+<footer class="footer mt-auto py-3 bg-light">
+  <div class="container">
+    <span class="text-muted">
+        powered by <a href="https://github.com/emscripten-forge/recipes">emscripten-forge</a>
+    </span>
+  </div>
+</footer>
 
-  <div id="terminal-container" style="height: 100px%"></div>
 
 </body>
 </html>
