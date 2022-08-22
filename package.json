@@ -5,11 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build:dockerimage": "docker build -t mamba_docker_image .",
-    "build:empack": "docker run  -it --mount type=bind,source=${PWD}/src,target=/wasm   mamba_docker_image cp -a output/. /wasm",
-    "build:copy_pyjs": "docker run  -it --mount type=bind,source=${PWD}/src,target=/wasm   mamba_docker_image cp -a /opt/conda/envs/pyjs-wasm-env/lib_js/pyjs/. /wasm",
+    "build:empack": "docker run   --mount type=bind,source=${PWD}/src,target=/wasm   mamba_docker_image cp -a output/. /wasm",
+    "build:copy_pyjs": "docker run   --mount type=bind,source=${PWD}/src,target=/wasm   mamba_docker_image cp -a /opt/conda/envs/pyjs-wasm-env/lib_js/pyjs/. /wasm",
     "get_wasm": "npm run build:dockerimage && npm run build:empack && npm run build:copy_pyjs && node add_export_to_js",
     "copy_to_source": "npm run build:dockerimage && npm run build:empack && npm run build:copy_pyjs",
-    "bash": "docker run  -it --mount type=bind,source=${PWD}/wasm,target=/wasm   mamba_docker_image bash",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack serve --mode development",
     "watch": "webpack --watch",
