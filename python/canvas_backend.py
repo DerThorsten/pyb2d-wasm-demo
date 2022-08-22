@@ -40,7 +40,6 @@ class CanvasAsyncGui(GuiBase):
         self.canvas.height = self.resolution[1]
 
         self.js_canvas_debug_draw = pyjs.js.canvas_debug_draw
-        print("self.js_canvas_debug_draw",self.js_canvas_debug_draw)
 
         self.debug_draw = HtmlCanvasBatchDebugDraw(
             canvas=self.canvas, js_canvas_debug_draw=self.js_canvas_debug_draw
