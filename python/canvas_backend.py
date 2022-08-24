@@ -30,7 +30,7 @@ class CanvasAsyncGui(GuiBase):
 
 
     def __init__(self, testbed_cls, settings, testbed_settings=None):
-        print("v4")
+        print("v5")
 
         self.settings = settings
         self.resolution = self.settings.resolution
@@ -187,8 +187,9 @@ class CanvasAsyncGui(GuiBase):
 
     def handle_touch_zoom(self, touches):
         l = touches.length
+        print(l)
         if l < 2:
-            self._last_delta = None
+            self._last_diff = None
         else:
 
             t0 = e.touches[0]
