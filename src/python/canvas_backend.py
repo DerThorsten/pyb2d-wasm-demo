@@ -14,7 +14,6 @@ def make_js_func(py_func):
 
 class PseudoMouseEvent(object):
     def __init__(self, touch_event):
-        pyjs.js.console.log("touch_event", touch_event)
         self.x = touch_event.clientX
         self.y = touch_event.clientY
 
@@ -186,19 +185,42 @@ class CanvasAsyncGui(GuiBase):
             self._last_screen_pos = xpos, ypos
 
 
+    def handle_touch_zoom(self, touches):
+        l = touches.length
+        if l < 2:
+            self._last_delta = None
+        else:
+
+            t0 = e.touches[0]
+            t1 = e.touches[1]
+            x0,y0 = t0.clientX,t0.clientY
+            x1,y1 = t1.clientX,t1.clientY
+
+            diff = (x0 - x1)**2 + (y0 - y1)**2
+            if diff > 0:
+                if self._last_diff is not None:
+                    q = diff / self._last_diff
+                    self.debug_draw.scale *= q
+                self._last_diff = diff
+            else:
+                self._last_diff = None
+
     def on_touch_down(self, e):
+
         e.preventDefault()
         # pyjs.js.console.log("touch down",e.touches.length)
+        self.handle_touch_zoom(e.touches)
         touch = PseudoMouseEvent(e.touches[0])
         self.on_mouse_down(touch)
 
     def on_touch_move(self, e):
         e.preventDefault()
-        # pyjs.js.console.log("touch move",e.touches.length)
+        self.handle_touch_zoom(e.touches)
         touch = PseudoMouseEvent(e.touches[0])
         self.on_mouse_move(touch)
 
     def on_touch_up(self, e):
+        self._last_diff = None
         if not self.paused:
             e.preventDefault()
             # pyjs.js.console.log("touch up",e.touches.length)
