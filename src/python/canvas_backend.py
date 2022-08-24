@@ -30,7 +30,7 @@ class CanvasAsyncGui(GuiBase):
 
 
     def __init__(self, testbed_cls, settings, testbed_settings=None):
-        print("v5")
+        print("v6..")
 
         self.settings = settings
         self.resolution = self.settings.resolution
@@ -190,6 +190,7 @@ class CanvasAsyncGui(GuiBase):
         print(l)
         if l < 2:
             self._last_diff = None
+
         else:
 
             t0 = e.touches[0]
@@ -198,10 +199,16 @@ class CanvasAsyncGui(GuiBase):
             x1,y1 = t1.clientX,t1.clientY
 
             diff = (x0 - x1)**2 + (y0 - y1)**2
+
+            print(f"{x0=} {y0=} {x1=} {y1=} {diff=}")
             if diff > 0:
                 if self._last_diff is not None:
+                    print(f"{self._last_diff=}")
                     q = diff / self._last_diff
+                    print(f"{q=}")
                     self.debug_draw.scale *= q
+                else:
+                    print("last diff was none")
                 self._last_diff = diff
             else:
                 self._last_diff = None
