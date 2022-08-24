@@ -14,8 +14,15 @@ def make_js_func(py_func):
 
 class PseudoMouseEvent(object):
     def __init__(self, touch_event):
+        pyjs.js.console.log("touch_event", touch_event)
         self.x = touch_event.clientX
         self.y = touch_event.clientY
+
+
+class ExplicitPseudoEvent(object):
+    def __init__(self, x,y):
+        self.x = x
+        self.y = y
 
 class CanvasAsyncGui(GuiBase):
     class Settings(GuiBase.Settings):
@@ -24,7 +31,7 @@ class CanvasAsyncGui(GuiBase):
 
 
     def __init__(self, testbed_cls, settings, testbed_settings=None):
-
+        print("v4")
 
         self.settings = settings
         self.resolution = self.settings.resolution
@@ -65,9 +72,9 @@ class CanvasAsyncGui(GuiBase):
         self.canvas["onmouseup"] = js_py_mouse_up
 
 
-        self.canvas.addEventListener("ontouchstart", js_py_touch_down, False)
-        self.canvas.addEventListener("ontouchmove", js_py_touch_move, False)
-        self.canvas.addEventListener("ontouchend", js_py_touch_up, False)
+        self.canvas["ontouchstart"] =  js_py_touch_down
+        self.canvas["ontouchmove"] =  js_py_touch_move
+        self.canvas["ontouchend"] =  js_py_touch_up
 
 
         js_dict = pyjs.js.Function("return { passive: false }")()
@@ -87,6 +94,7 @@ class CanvasAsyncGui(GuiBase):
 
         self._last_screen_pos = None
         self._mouse_is_down = False
+
 
     def _terminate(self):
         if not self._stop:
@@ -141,20 +149,6 @@ class CanvasAsyncGui(GuiBase):
             pos = pos.x, pos.y
 
             self.testbed.on_mouse_down(pos)
-
-    def on_touch_down(self, e):
-        e.preventDefault()
-        touch = PseudoMouseEvent(e.touches[0])
-        self.on_mouse_down(touch)
-    def on_touch_move(self, e):
-        e.preventDefault()
-        touch = PseudoMouseEvent(e.touches[0])
-        self.on_mouse_move(touch)
-    def on_touch_up(self, e):
-        e.preventDefault()
-        touch = PseudoMouseEvent(e.touches[0])
-        self.on_mouse_up(touch)
-
     # moue callbacks
     def on_mouse_up(self, e):
         if not self.paused:
@@ -190,6 +184,29 @@ class CanvasAsyncGui(GuiBase):
                     translate[1] - dy,
                 )
             self._last_screen_pos = xpos, ypos
+
+
+    def on_touch_down(self, e):
+        e.preventDefault()
+        # pyjs.js.console.log("touch down",e.touches.length)
+        touch = PseudoMouseEvent(e.touches[0])
+        self.on_mouse_down(touch)
+
+    def on_touch_move(self, e):
+        e.preventDefault()
+        # pyjs.js.console.log("touch move",e.touches.length)
+        touch = PseudoMouseEvent(e.touches[0])
+        self.on_mouse_move(touch)
+
+    def on_touch_up(self, e):
+        if not self.paused:
+            e.preventDefault()
+            # pyjs.js.console.log("touch up",e.touches.length)
+            touch = ExplicitPseudoEvent(*self._last_screen_pos)
+            self.on_mouse_up(touch)
+
+
+
 
     def start_ui(self):
         return self
