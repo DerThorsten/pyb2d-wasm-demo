@@ -225,5 +225,7 @@ class Billiard(TestbedBase):
 
 
 async def async_main(context):
-    gui_settings = gui_settings_from_context(context, scale=10, resolution=[500,200])
+    resolution=[600,600]
+    translate = [200, -450]
+    gui_settings = gui_settings_from_context(context, scale=7, resolution=resolution, translate=translate)
     await run_example(Billiard, gui_settings, context)
