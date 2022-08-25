@@ -42,6 +42,7 @@ class CanvasDebugDraw {
     }
 
     draw_poly_impl(polygon_length, polygon_points, color, solid, lineWidth=1){
+        
         this.context.beginPath();
 
         this.context.moveTo(polygon_points[0],polygon_points[1]);
@@ -67,16 +68,43 @@ class CanvasDebugDraw {
 
     draw_polygons(points, sizes, colors, solid){
 
-        const n = sizes.length
-        var offset = 0
-        for (let i = 0; i < n; i++) {
-            const polygon_length = sizes[i];
-            const polygon_points = points.subarray(offset, 2*polygon_length)
-            const polygon_color = colors.subarray(i*3, i*3 +3)
+        var offset = 0;
+        for (let i = 0; i < sizes.length; i++) {
+            let polygon_length = sizes[i];
+            let polygon_points = points.subarray(offset, offset+2*polygon_length)
+            let polygon_color = colors.subarray(i*3, i*3 +3)
             this.draw_poly_impl(polygon_length,polygon_points,polygon_color, solid)
             offset += 2 * polygon_length;
         }
     }
+
+    draw_particles(centers, radius, colors){
+        if(colors === undefined)
+        {
+            this.context.fillStyle = `rgb(255,255,255)`;
+        }
+        
+
+        let n = centers.length / 2
+
+        const diameter = 2*radius;
+
+        for (let i = 0; i <n; i++) {
+            // console.log("i",i)
+            const x = centers[2*i]
+            const y = centers[2*i + 1]
+            this.context.beginPath()
+            if(colors)
+            {
+                const color = colors.subarray(i*4, i*4+4)
+
+                this.context.fillStyle = `rgba(${color[0]},${color[1]},${color[2]},${color[3]})`;
+            }
+            this.context.rect(x-radius, y-radius, diameter, diameter); 
+            this.context.fill()
+        }
+    }
+
 
 
     draw_solid_circles(centers, radii, axis, colors){

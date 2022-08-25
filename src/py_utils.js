@@ -5,16 +5,20 @@ var pyjs_init_promise = null
 var pyjs = null
 var editor = null
 
+
+const API_VER = "v1";
+
 async function load_pycode(loc){
     return await (await fetch(loc)).text();
 }
 
+
 function db_load_example(context, name){
-    let db_key = `examples/${name}`
+    let db_key = `${API_VER}-examples/${name}`
     return localStorage.getItem(db_key);
 }
 function db_store_example(context, name, code){
-    let db_key = `examples/${name}`
+    let db_key = `${API_VER}-examples/${name}`
     localStorage.setItem(db_key, code)
 }
 

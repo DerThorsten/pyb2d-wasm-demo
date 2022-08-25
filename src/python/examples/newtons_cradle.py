@@ -60,5 +60,5 @@ class NewtonsCradle(TestbedBase):
 
 
 async def async_main(context):
-    gui_settings = gui_settings_from_context(context, scale=10, resolution=[500,200])
+    gui_settings = gui_settings_from_context(context)
     await run_example(NewtonsCradle, gui_settings, context)

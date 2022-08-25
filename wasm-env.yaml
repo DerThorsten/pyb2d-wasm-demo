@@ -5,4 +5,5 @@ channels:
 dependencies:
   - pyjs == 0.11.2
   - numpy
-  - pyb2d
+  - pyb2d >= 0.7.3
+  - networkx
