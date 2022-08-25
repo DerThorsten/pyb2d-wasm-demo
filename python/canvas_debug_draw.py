@@ -24,7 +24,7 @@ class HtmlCanvasBatchDebugDraw(b2d.batch_debug_draw_cls(False, False, True)):
             self.append_flags(flag)
 
     def _draw_solid_polygons(self, points, sizes, colors):
-
+        
         js_points = pyjs.buffer_to_js_typed_array(points.ravel())
         js_sizes = pyjs.buffer_to_js_typed_array(sizes)
         js_colors = pyjs.buffer_to_js_typed_array(colors.ravel())
@@ -32,7 +32,7 @@ class HtmlCanvasBatchDebugDraw(b2d.batch_debug_draw_cls(False, False, True)):
         self.js_canvas_debug_draw.draw_polygons(js_points, js_sizes, js_colors, True)
 
     def _draw_polygons(self, points, sizes, colors):
-
+        
         js_points = pyjs.buffer_to_js_typed_array(points.ravel())
         js_sizes = pyjs.buffer_to_js_typed_array(sizes)
         js_colors = pyjs.buffer_to_js_typed_array(colors.ravel())
@@ -40,7 +40,7 @@ class HtmlCanvasBatchDebugDraw(b2d.batch_debug_draw_cls(False, False, True)):
         self.js_canvas_debug_draw.draw_polygons(js_points, js_sizes, js_colors, False)
 
     def _draw_solid_circles(self, centers, radii, axis, colors):
-
+        
         js_centers = pyjs.buffer_to_js_typed_array(centers.ravel())
         js_radii = pyjs.buffer_to_js_typed_array(radii)
         js_axis = pyjs.buffer_to_js_typed_array(axis.ravel())
@@ -51,6 +51,7 @@ class HtmlCanvasBatchDebugDraw(b2d.batch_debug_draw_cls(False, False, True)):
         )
 
     def _draw_circles(self, centers, radii, colors):
+        
         js_centers = pyjs.buffer_to_js_typed_array(centers.ravel())
         js_radii = pyjs.buffer_to_js_typed_array(radii)
         js_colors = pyjs.buffer_to_js_typed_array(colors.ravel())
@@ -58,7 +59,7 @@ class HtmlCanvasBatchDebugDraw(b2d.batch_debug_draw_cls(False, False, True)):
         self.js_canvas_debug_draw.draw_circles(js_centers, js_radii, js_colors)
 
     def _draw_points(self, centers, sizes, colors):
-        pass
+        return
 
     def _draw_segments(self, points, colors):
         js_points = pyjs.buffer_to_js_typed_array(points.ravel())
@@ -66,15 +67,23 @@ class HtmlCanvasBatchDebugDraw(b2d.batch_debug_draw_cls(False, False, True)):
         self.js_canvas_debug_draw.draw_segments(js_points, js_colors)
 
     def _draw_particles(self, centers, radius, colors=None):
-        pass
+        js_centers = pyjs.buffer_to_js_typed_array(centers.ravel())
+        if colors is not None:
+            colors = numpy.require(colors, dtype='uint8')
+
+            js_colors = pyjs.buffer_to_js_typed_array(colors.ravel())
+            self.js_canvas_debug_draw.draw_particles(js_centers, radius, js_colors)
+        else:
+            self.js_canvas_debug_draw.draw_particles(js_centers, radius)
 
     # non-batch api
     def draw_solid_circle(self, center, radius, axis, color):
+        
         # print("draw_solid_circle")
         center = self.world_to_screen(center)
         radius = self.world_to_screen_scale(radius)
-        center = numpy.require(center)
-        axis = numpy.require(axis)
+        center = numpy.require(center,dtype='uint32')
+        axis = numpy.require(axis, dtype='float32')
         color = (numpy.require(color) * 255.0).astype("uint8")
 
         js_center = pyjs.buffer_to_js_typed_array(center.ravel())
@@ -84,9 +93,10 @@ class HtmlCanvasBatchDebugDraw(b2d.batch_debug_draw_cls(False, False, True)):
         self.js_canvas_debug_draw.draw_circle_impl(js_center, radius, js_color, js_axis)
 
     def draw_circle(self, center, radius, color, line_width=1):
+        
         center = self.world_to_screen(center)
         radius = self.world_to_screen_scale(radius)
-        center = numpy.require(center)
+        center = numpy.require(center, dtype='uint32')
         color = (numpy.require(color) * 255.0).astype("uint8")
 
         js_center = pyjs.buffer_to_js_typed_array(center.ravel())

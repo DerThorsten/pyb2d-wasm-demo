@@ -1,4 +1,14 @@
 [
-    ["Newtons Craddle","newtons_cradle.py"],
-    ["Billiard","billiard.py"]
+    ["color_mixing","color_mixing.py"],
+    ["angry_shapes","angry_shapes.py"],
+    ["rocket","rocket.py"],
+    ["billiard","billiard.py"],
+    ["blender","blender.py"],
+    ["elliptic_billiard_table","elliptic_billiard_table.py"],
+    ["function_shape","function_shape.py"],
+    ["gauss_machine","gauss_machine.py"],
+    ["goo","goo.py"],
+    ["newtons_cradle","newtons_cradle.py"],
+    ["raycast","raycast.py"]
+
 ]
