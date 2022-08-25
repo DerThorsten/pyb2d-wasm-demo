@@ -22,7 +22,7 @@ import {init_ui_pre,init_ui_post} from './ui.js'
 const asyncMain = async () => {
 
 
-    let resolution = [800, 800];
+    let resolution = [500, 500];
 
     var terminal = createTerminal()
     var editor = createEditor()
