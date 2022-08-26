@@ -187,10 +187,8 @@ class CanvasAsyncGui(GuiBase):
 
     def handle_touch_zoom(self, touches):
         l = touches.length
-        # print(l)
         if l < 2:
             self._last_diff = None
-
         else:
 
             t0 = touches[0]
@@ -207,24 +205,25 @@ class CanvasAsyncGui(GuiBase):
                     q = diff / self._last_diff
                     # print(f"{q=}")
                     self.debug_draw.scale *= q
-                else:
-                    pass
-                    # print("last diff was none")
+                    return True
                 self._last_diff = diff
             else:
                 self._last_diff = None
+        return False
 
     def on_touch_down(self, e):
 
         e.preventDefault()
         # pyjs.js.console.log("touch down",e.touches.length)
-        self.handle_touch_zoom(e.touches)
+        if self.handle_touch_zoom(e.touches):
+            return
         touch = PseudoMouseEvent(e.touches[0])
         self.on_mouse_down(touch)
 
     def on_touch_move(self, e):
         e.preventDefault()
-        self.handle_touch_zoom(e.touches)
+        if self.handle_touch_zoom(e.touches):
+            return
         touch = PseudoMouseEvent(e.touches[0])
         self.on_mouse_move(touch)
 
