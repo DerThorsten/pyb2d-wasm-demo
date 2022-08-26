@@ -1,4 +1,5 @@
 [
+    ["letters","letters.py"],
     ["color_mixing","color_mixing.py"],
     ["angry_shapes","angry_shapes.py"],
     ["rocket","rocket.py"],

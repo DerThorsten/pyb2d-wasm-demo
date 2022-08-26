@@ -6,7 +6,21 @@ var pyjs = null
 var editor = null
 
 
-const API_VER = "v1";
+const params = new Proxy(new URLSearchParams(window.location.search), {
+  get: (searchParams, prop) => searchParams.get(prop),
+});
+if(params.debug !== undefined){
+    var debug = true
+}
+else
+{
+    var debug =false
+}
+
+
+
+
+const API_VER = "v5";
 
 async function load_pycode(loc){
     return await (await fetch(loc)).text();
@@ -25,7 +39,7 @@ function db_store_example(context, name, code){
 async function load_pyb2_example(context, name){
 
     let saved_exampled = db_load_example(context, name)
-    if(!saved_exampled || saved_exampled==="")
+    if(!saved_exampled || saved_exampled==="" || debug)
     {
         let fname = context.examples.examples_dict[name]
         let p =  load_pycode(`./python/examples/${fname}`)
