@@ -22,7 +22,13 @@ import {init_ui_pre,init_ui_post} from './ui.js'
 const asyncMain = async () => {
 
 
-    let resolution = [800, 500];
+    var height = $(window).height();
+    var width = $(window).width();
+
+    console.log("HW",height, width)
+
+
+    let resolution = [width, 500];
 
     var terminal = createTerminal()
     var editor = createEditor()
@@ -51,7 +57,7 @@ const asyncMain = async () => {
         gui_settings : {
             resolution : resolution,
             scale : 15,
-            translate : [0, -1 * resolution[1] / 2],
+            translate : [0, -1 * resolution[1] ],
             fps:24
         }
 

@@ -90,14 +90,13 @@ function add_level_to_dropdown(context, text){
     link.onclick = async function(evt){
 
         if(context.state.running){
-
             await stop_running(context)
-            
-            var level_toggle_button = document.getElementById("level_toggle_button")
-            level_toggle_button.innerHTML = text
-            await set_current_example(context, text)
-            await start_running(context)
         }
+        var level_toggle_button = document.getElementById("level_toggle_button")
+        level_toggle_button.innerHTML = text
+        await set_current_example(context, text)
+        await start_running(context)
+        
     }
     list.appendChild(li);
 }

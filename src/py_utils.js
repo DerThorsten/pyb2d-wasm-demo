@@ -20,7 +20,7 @@ else
 
 
 
-const API_VER = "v5";
+const API_VER = "v7";
 
 async function load_pycode(loc){
     return await (await fetch(loc)).text();
@@ -57,6 +57,7 @@ async function set_current_example(context, name){
     var load_code_promise = load_pyb2_example(context, name)
     load_code_promise.then((code)=>{
         context.terminal.writeln("loaded code")
+        context.terminal.writeln("only a few more seconds")
         context.editor.dispatch({
           changes: {from: 0, to: context.editor.state.doc.length, insert: code}
         })
@@ -113,7 +114,8 @@ async function init_pyjs(context){
     await load_all()
     pyjs_init_promise =  pyjs.init()
     pyjs_init_promise.then(()=>{
-        terminal.writeln("pyjs is initialized")
+        terminal.writeln("python interpreter is ready")
+        terminal.writeln("launch python code!")
     })
 
     return pyjs_init_promise

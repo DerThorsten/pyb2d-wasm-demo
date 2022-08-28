@@ -373,7 +373,7 @@ class Letters(TestbedBase):
             density=2,
         )
         psystem = self.world.create_particle_system(pdef)
-        psystem.radius = 0.3
+        psystem.radius = 0.5
         psystem.damping = 1.0
 
 
