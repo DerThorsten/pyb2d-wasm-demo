@@ -348,15 +348,17 @@ class AngryShapes(TestbedBase):
             )
 
     def post_debug_draw(self):
-        for target in self.targets:
-            self.draw_target(target)
+        # for target in self.targets:
+        #     self.draw_target(target)
 
         for projectile in self.projectiles:
             self.draw_projectile(projectile)
 
 
 async def async_main(context):
-    resolution=[600,600]
-    translate = [200, -450]
-    gui_settings = gui_settings_from_context(context, scale=7, resolution=resolution, translate=translate)
-    await run_example(AngryShapes, gui_settings, context)
+    # resolution=[600,600]
+    # translate = [200, -450]
+    gui_settings = gui_settings_from_context(context)
+    settings = AngryShapes.Settings()
+    settings.substeps = 5
+    await run_example(AngryShapes, gui_settings, context, settings=settings)

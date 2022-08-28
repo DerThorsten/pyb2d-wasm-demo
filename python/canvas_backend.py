@@ -6,6 +6,9 @@ import functools
 from b2d.testbed import TestbedBase
 import time
 
+from pyjs.js import console
+clog = console.log
+
 
 def make_js_func(py_func):
     jspy = pyjs.JsValue(py_func)
@@ -30,7 +33,7 @@ class CanvasAsyncGui(GuiBase):
 
 
     def __init__(self, testbed_cls, settings, testbed_settings=None):
-        print("v7..")
+
 
         self.settings = settings
         self.resolution = self.settings.resolution
@@ -56,28 +59,43 @@ class CanvasAsyncGui(GuiBase):
         )
         self.flip_bit = False
 
+        self._handles_to_delete = []
         # canvas _events THIS IS A MEM LEAK!
-        js_py_mouse_up, _ = make_js_func(self.on_mouse_up)
-        js_py_mouse_down, _ = make_js_func(self.on_mouse_down)
-        js_py_mouse_move, _ = make_js_func(self.on_mouse_move)
-        js_py_mouse_wheel, _ = make_js_func(self.on_mouse_wheel)
+        self.js_py_mouse_up, handle = make_js_func(self.on_mouse_up)
+        self._handles_to_delete.append(handle)
 
-        js_py_touch_up, _ = make_js_func(self.on_touch_up)
-        js_py_touch_down, _ = make_js_func(self.on_touch_down)
-        js_py_touch_move, _ = make_js_func(self.on_touch_move)
+        self.js_py_mouse_down, handle = make_js_func(self.on_mouse_down)
+        self._handles_to_delete.append(handle)
 
-        self.canvas["onmousedown"] = js_py_mouse_down
-        self.canvas["onmousemove"] = js_py_mouse_move
-        self.canvas["onmouseup"] = js_py_mouse_up
+        self.js_py_mouse_move, handle = make_js_func(self.on_mouse_move)
+        self._handles_to_delete.append(handle)
+
+        self.js_py_mouse_wheel, handle = make_js_func(self.on_mouse_wheel)
+        self._handles_to_delete.append(handle)
 
 
-        self.canvas["ontouchstart"] =  js_py_touch_down
-        self.canvas["ontouchmove"] =  js_py_touch_move
-        self.canvas["ontouchend"] =  js_py_touch_up
+        self.js_py_touch_up, handle = make_js_func(self.on_touch_up)
+        self._handles_to_delete.append(handle)
+
+        self.js_py_touch_down, handle = make_js_func(self.on_touch_down)
+        self._handles_to_delete.append(handle)
+
+        self.js_py_touch_move, handle = make_js_func(self.on_touch_move)
+        self._handles_to_delete.append(handle)
+
+
+
+
+        self.canvas.addEventListener("mousedown", self.js_py_mouse_down, False)
+        self.canvas.addEventListener("mousemove", self.js_py_mouse_move, False)
+        self.canvas.addEventListener("mouseup", self.js_py_mouse_up, False)
+        self.canvas.addEventListener("touchstart", self.js_py_touch_down, False)
+        self.canvas.addEventListener("touchmove", self.js_py_touch_move, False)
+        self.canvas.addEventListener("touchend", self.js_py_touch_up, False)
 
 
         js_dict = pyjs.js.Function("return { passive: false }")()
-        self.canvas.addEventListener("wheel", js_py_mouse_wheel, js_dict)
+        self.canvas.addEventListener("wheel", self.js_py_mouse_wheel, js_dict)
 
         # todo!
         self._debug_draw_flags = self.settings.get_debug_draw_flags()
@@ -94,6 +112,26 @@ class CanvasAsyncGui(GuiBase):
         self._last_screen_pos = None
         self._mouse_is_down = False
 
+
+        # zoom range
+        self._max_scale = 30
+        self._min_scale = 1
+
+    def _cleanup(self):
+
+        self.canvas.removeEventListener("mousedown",  self.js_py_mouse_down, False)
+        self.canvas.removeEventListener("mousemove",  self.js_py_mouse_move, False)
+        self.canvas.removeEventListener("mouseup",    self.js_py_mouse_up, False)
+        self.canvas.removeEventListener("touchstart", self.js_py_touch_down, False)
+        self.canvas.removeEventListener("touchmove",  self.js_py_touch_move, False)
+        self.canvas.removeEventListener("touchend",   self.js_py_touch_up, False)
+
+        js_dict = pyjs.js.Function("return { passive: false }")()
+        self.canvas.removeEventListener("wheel",        self.js_py_mouse_wheel, js_dict)
+
+        for h in self._handles_to_delete:
+            h.delete()
+        self._handles_to_delete = []
 
     def _terminate(self):
         if not self._stop:
@@ -128,61 +166,80 @@ class CanvasAsyncGui(GuiBase):
     def set_pause(self, p):
         self.paused = p
 
+
+    def _set_scale(self, s):
+        self.debug_draw.scale = max(min(s, self._max_scale), self._min_scale)
+        if self.paused:
+            self._redraw()
+
     def on_mouse_wheel(self, e):
         e.preventDefault()
         dy = e.deltaY
         z = self.debug_draw.scale
         if dy < 0:
-            self.debug_draw.scale *= 1.1
+            self._set_scale(self.debug_draw.scale * 1.1)
         elif dy > 0:
-            self.debug_draw.scale *= 0.9
+            self._set_scale(self.debug_draw.scale * 0.9)
 
     def on_mouse_down(self, e):
+        e.preventDefault()
+        xpos, ypos = self._get_xy(e)
+        self._mouse_is_down = True
+        self._last_screen_pos = xpos, ypos
+
+        pos = self.debug_draw.screen_to_world(self._last_screen_pos)
+
+        pos = pos.x, pos.y
         if not self.paused:
-            xpos, ypos = self._get_xy(e)
-            self._mouse_is_down = True
-            self._last_screen_pos = xpos, ypos
-
-            pos = self.debug_draw.screen_to_world(self._last_screen_pos)
-
-            pos = pos.x, pos.y
-
             self.testbed.on_mouse_down(pos)
+        else:
+            self._redraw()
+
     # moue callbacks
     def on_mouse_up(self, e):
+        e.preventDefault()
+
+        xpos, ypos = self._get_xy(e)
+        self._mouse_is_down = False
+        self._last_screen_pos = xpos, ypos
+        pos = self.debug_draw.screen_to_world((xpos, ypos))
+        pos = pos.x, pos.y
+
         if not self.paused:
-
-            xpos, ypos = self._get_xy(e)
-            self._mouse_is_down = False
-            self._last_screen_pos = xpos, ypos
-            pos = self.debug_draw.screen_to_world((xpos, ypos))
-            pos = pos.x, pos.y
-
             self.testbed.on_mouse_up(pos)
+        else:
+            self._redraw()
 
     def on_mouse_move(self, e):
+        e.preventDefault()
+
+        xpos, ypos = self._get_xy(e)
+
+        pos = self.debug_draw.screen_to_world((xpos, ypos))
+        pos = pos.x, pos.y
+
         if not self.paused:
-            xpos, ypos = self._get_xy(e)
-
-            pos = self.debug_draw.screen_to_world((xpos, ypos))
-            pos = pos.x, pos.y
-
             handled_event = self.testbed.on_mouse_move(pos)
-            if (
-                not handled_event
-                and self._mouse_is_down
-                and self._last_screen_pos is not None
-            ):
+        else:
+            handled_event = False
 
-                lxpos, lypos = self._last_screen_pos
-                dx, dy = xpos - lxpos, ypos - lypos
+        if (
+            not handled_event
+            and self._mouse_is_down
+            and self._last_screen_pos is not None
+        ):
 
-                translate = self.debug_draw.translate
-                self.debug_draw.translate = (
-                    translate[0] + dx,
-                    translate[1] - dy,
-                )
-            self._last_screen_pos = xpos, ypos
+            lxpos, lypos = self._last_screen_pos
+            dx, dy = xpos - lxpos, ypos - lypos
+
+            translate = self.debug_draw.translate
+            self.debug_draw.translate = (
+                translate[0] + dx,
+                translate[1] - dy,
+            )
+            if self.paused:
+                self._redraw()
+        self._last_screen_pos = xpos, ypos
 
 
     def handle_touch_zoom(self, touches):
@@ -201,10 +258,12 @@ class CanvasAsyncGui(GuiBase):
             # print(f"{x0=} {y0=} {x1=} {y1=} {diff=}")
             if diff > 0:
                 if self._last_diff is not None:
-                    # print(f"{self._last_diff=}")
-                    q = diff / self._last_diff
-                    # print(f"{q=}")
-                    self.debug_draw.scale *= q
+                    # we multiply be by 0.2  to make the zoom less "drastic"
+                    q = (diff / self._last_diff ) * 0.2
+
+                    self._set_scale(self.debug_draw.scale * q)
+                    if self.paused:
+                        self._redraw()
                     return True
                 self._last_diff = diff
             else:
@@ -214,7 +273,7 @@ class CanvasAsyncGui(GuiBase):
     def on_touch_down(self, e):
 
         e.preventDefault()
-        # pyjs.js.console.log("touch down",e.touches.length)
+        # clog("touch down",e.touches.length)
         if self.handle_touch_zoom(e.touches):
             return
         touch = PseudoMouseEvent(e.touches[0])
@@ -268,6 +327,11 @@ class CanvasAsyncGui(GuiBase):
                 await asyncio.sleep(self._dt_s)
 
         self.reached_end = True
+        self._cleanup()
+
+    def _redraw(self):
+        self._clear_canvas()
+        self.testbed.draw_debug_data()
 
     def _clear_canvas(self):
         ctx = self.debug_draw.context
@@ -295,9 +359,15 @@ def gui_settings_from_context(context, **kwargs):
 # hack hack things...do not change to much here =)
 backends = [None]
 
-async def run_example(testbed_cls, gui_settings, context):
-    ui = b2d.testbed.run(
-        testbed_cls, backend=CanvasAsyncGui, gui_settings=gui_settings
-    )
+
+async def run_example(testbed_cls , gui_settings, context, settings=None):
+    if settings is None:
+        ui = b2d.testbed.run(
+            testbed_cls, backend=CanvasAsyncGui, gui_settings=gui_settings
+        )
+    else:
+        ui = b2d.testbed.run(
+            testbed_cls, backend=CanvasAsyncGui, gui_settings=gui_settings,settings=settings
+        )
     backends[0] = ui
     await ui.aync_start_ui(context)

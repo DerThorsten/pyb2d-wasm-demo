@@ -1,5 +1,6 @@
 [
-    ["letters","letters.py"],
+    ["rigid_letters","rigid_letters.py"],
+    ["liquid_letters","liquid_letters.py"],
     ["color_mixing","color_mixing.py"],
     ["angry_shapes","angry_shapes.py"],
     ["rocket","rocket.py"],
