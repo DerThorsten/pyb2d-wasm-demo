@@ -25,9 +25,6 @@ const asyncMain = async () => {
     var height = $(window).height();
     var width = $(window).width();
 
-    console.log("HW",height, width)
-
-
     let resolution = [width, 500];
 
     var terminal = createTerminal()
@@ -54,11 +51,14 @@ const asyncMain = async () => {
             paused : false,
             run_promise : null
         },
-        gui_settings : {
+        default_gui_settings : {
             resolution : resolution,
             scale : 15,
             translate : [0, -1 * resolution[1] ],
             fps:24
+        },
+        per_example_gui_settings : {
+
         }
 
     }

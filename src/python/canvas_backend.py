@@ -173,6 +173,7 @@ class CanvasAsyncGui(GuiBase):
 
     def _set_scale(self, s):
         self.debug_draw.scale = max(min(s, self._max_scale), self._min_scale)
+        self.js_gui_settings.scale = self.debug_draw.scale
         if self.paused:
             self._redraw()
 
@@ -241,6 +242,9 @@ class CanvasAsyncGui(GuiBase):
                 translate[0] + dx,
                 translate[1] - dy,
             )
+            self.js_gui_settings.translate[0] = self.debug_draw.translate[0]
+            self.js_gui_settings.translate[1] = self.debug_draw.translate[1]
+
             if self.paused:
                 self._redraw()
         self._last_screen_pos = xpos, ypos
@@ -305,7 +309,8 @@ class CanvasAsyncGui(GuiBase):
         return self
 
     async def aync_start_ui(self, context):
-
+        self.context = context
+        self.js_gui_settings = self.context.per_example_gui_settings[self.context.examples.current_example]
         # make the world
         self.make_testbed()
 
@@ -355,7 +360,16 @@ class CanvasAsyncGui(GuiBase):
 
 
 def gui_settings_from_context(context, **kwargs):
-    gui_settings = CanvasAsyncGui.Settings.parse_obj(pyjs.to_py(context.gui_settings))
+
+    current_example = context.examples.current_example
+    per_example_gui_settings = context.per_example_gui_settings[current_example] 
+    # if per_example_gui_settings is not None:
+    #     gui_settings = per_example_gui_settings
+    # else:
+    #     gui_settings = context.default_gui_settings
+    gui_settings = CanvasAsyncGui.Settings.parse_obj(pyjs.to_py(per_example_gui_settings))
+
+
     for k,v in kwargs.items():
         setattr(gui_settings, k, v)
     return gui_settings

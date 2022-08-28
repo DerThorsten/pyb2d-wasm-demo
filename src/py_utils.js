@@ -61,7 +61,7 @@ async function set_current_example(context, name){
         context.editor.dispatch({
           changes: {from: 0, to: context.editor.state.doc.length, insert: code}
         })
-        context.examples.curret_example = name
+        context.examples.current_example = name
     })
     return load_code_promise
 }
@@ -175,7 +175,6 @@ async function run(context){
         context.ctrl.pause_button.disabled = false
         context.ctrl.forward_button.disabled = true
         context.ctrl.stop_button.disabled = false
-                  
         context.state.run_promise =  async_main.py_call_async(context)
         await context.state.run_promise
         context.state.running = false

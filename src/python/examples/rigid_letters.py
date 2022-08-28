@@ -367,4 +367,5 @@ class RigitLetters(TestbedBase):
 
 async def async_main(context):
     gui_settings = gui_settings_from_context(context)
+    pyjs.js.console.log(context)
     await run_example(RigitLetters, gui_settings, context)

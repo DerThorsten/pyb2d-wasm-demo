@@ -126,7 +126,7 @@ function setup_controlls(context)
                 context.state.paused = false
                 fpause.py_call(context.state.paused)
 
-                play_button.disabled = true
+                play_button.disabled = trueper_example_gui_settings
                 pause_button.disabled = false
                 forward_button.disabled = true
                 stop_button.disabled = false
@@ -185,6 +185,9 @@ function init_ui_post(context){
     for(let i=0; i<examples.length; ++i)
     {
         add_level_to_dropdown(context, examples[i][0])
+        context.per_example_gui_settings[examples[i][0]] =  JSON.parse(JSON.stringify(context.default_gui_settings))
+
     }
+    console.log(context.per_example_gui_settings)
 }
 export {init_ui_pre,init_ui_post}
