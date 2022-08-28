@@ -20,12 +20,16 @@ class PseudoMouseEvent(object):
         self.x = touch_event.clientX
         self.y = touch_event.clientY
 
+    def preventDefault(self):
+        pass
 
 class ExplicitPseudoEvent(object):
     def __init__(self, x,y):
         self.x = x
         self.y = y
-
+    def preventDefault(self):
+        pass
+        
 class CanvasAsyncGui(GuiBase):
     class Settings(GuiBase.Settings):
         class Config:
