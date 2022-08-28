@@ -10,11 +10,6 @@ function createEditor(){
     var inputtext = document.getElementById("inputtext")
     // inputtext.parentNode.insertBefore(editor.dom, inputtext)
 
-
-    // let editor = new EditorView({
-    //   extensions: [basicSetup,themeConfig.of(materialDarker)],
-    //   parent: document.body
-    // })
     let editor = new EditorView({
       doc: "no code loaded yet - probably an error, check the \"Log\" tab",
       extensions: [
@@ -24,11 +19,6 @@ function createEditor(){
       ],
       parent: inputtext.parentNode
     })
-
-
-
-
-
 
     inputtext.style.display = "none"
     if (inputtext.form) inputtext.form.addEventListener("submit", () => {

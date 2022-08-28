@@ -258,8 +258,8 @@ class CanvasAsyncGui(GuiBase):
             # print(f"{x0=} {y0=} {x1=} {y1=} {diff=}")
             if diff > 0:
                 if self._last_diff is not None:
-                    # we multiply be by 0.2  to make the zoom less "drastic"
-                    q = (diff / self._last_diff ) * 0.2
+                    # we the pow 0.2 to make the zoom less "drastic"
+                    q = (diff / self._last_diff ) ** 0.2
 
                     self._set_scale(self.debug_draw.scale * q)
                     if self.paused:
