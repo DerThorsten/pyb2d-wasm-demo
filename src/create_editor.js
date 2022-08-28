@@ -16,7 +16,7 @@ function createEditor(){
     //   parent: document.body
     // })
     let editor = new EditorView({
-      doc: "wop",
+      doc: "no code loaded yet - probably an error, check the \"Log\" tab",
       extensions: [
         basicSetup,
         python(),

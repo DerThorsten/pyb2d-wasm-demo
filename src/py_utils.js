@@ -2,7 +2,7 @@ import {createModule} from './pyjs_runtime_browser.js';
 import {CanvasDebugDraw} from "./canvas_debug_draw.js"
 
 var pyjs_init_promise = null
-var pyjs = null
+// var pyjs = null
 var editor = null
 
 
@@ -93,17 +93,28 @@ const printErr = (terminal, text) => {
 
 async function init_pyjs(context){
     var terminal = context.terminal;
-    pyjs = await createModule({
-        print: (txt)=>{
-            print(terminal, txt)
-        },
-        printErr: (txt)=>{
-            printErr(terminal, txt)
-        }
-    })
+    var fail = false
+    try{
+        globalThis.pyjs = await createModule({
+            print: (txt)=>{
+                print(terminal, txt)
+            },
+            printErr: (txt)=>{
+                printErr(terminal, txt)
+            }
+        })
+    }
+    catch(e){
+        fail = true
+        console.log(e)
+        terminal.writeln(`An error occurred while instantiating the wasm code:`);
+        terminal.writeln(`   ${e.message}`);
+        terminal.writeln("Probably your browser is not up to date, consider an update!!");
+        throw e
+    }
     // globalThis.Module = pyjs
-    globalThis.pyjs = pyjs
-    pyjs.empackSetStatus = function(status, packageName, downloaded,total){
+    // globalThis.pyjs = pyjs
+    globalThis.pyjs.empackSetStatus = function(status, packageName, downloaded,total){
         var str = `Downloading data: ${downloaded} / ${total}`
         // console.log(str)
         terminal.writeln(str);
@@ -112,13 +123,14 @@ async function init_pyjs(context){
     terminal.writeln("Download data ...")
     const { default: load_all }  = await import('./sample_webpack_example.js')
     await load_all()
-    pyjs_init_promise =  pyjs.init()
+    pyjs_init_promise =  globalThis.pyjs.init()
     pyjs_init_promise.then(()=>{
         terminal.writeln("python interpreter is ready")
         terminal.writeln("launch python code!")
     })
 
     return pyjs_init_promise
+
 }
 
 async function fetch_examples_list(context){
@@ -135,17 +147,18 @@ async function fetch_examples_list(context){
 
 async function init_py(context){
 
-
+    
     await Promise.all([
         init_pyjs(context),
         fetch_examples_list(context)
     ])
-
- 
     await Promise.all([
         init_pybd(context), 
         set_current_example(context, context.examples.examples_list[0][0])
     ])
+
+ 
+
     return globalThis.pyjs
 }
 
@@ -154,8 +167,8 @@ async function run(context){
     var text = context.editor.state.doc.toString()
     db_store_example(context, context.examples.curret_example, text)
     try{
-        pyjs.exec(text)
-        var async_main =  pyjs.eval("async_main")
+        globalThis.pyjs.exec(text)
+        var async_main =  globalThis.pyjs.eval("async_main")
         context.state.running = true
 
         context.ctrl.play_button.disabled = true
