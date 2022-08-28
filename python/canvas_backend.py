@@ -29,7 +29,7 @@ class ExplicitPseudoEvent(object):
         self.y = y
     def preventDefault(self):
         pass
-        
+
 class CanvasAsyncGui(GuiBase):
     class Settings(GuiBase.Settings):
         class Config:
@@ -263,7 +263,7 @@ class CanvasAsyncGui(GuiBase):
             if diff > 0:
                 if self._last_diff is not None:
                     # we the pow 0.2 to make the zoom less "drastic"
-                    q = (diff / self._last_diff ) ** 0.2
+                    q = (diff / self._last_diff ) ** 0.05
 
                     self._set_scale(self.debug_draw.scale * q)
                     if self.paused:
